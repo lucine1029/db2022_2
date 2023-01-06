@@ -23,3 +23,24 @@ ENCLOSED BY '"'
 LINES TERMINATED BY '\n'
 IGNORE 1 ROWS;
 
+/* Normalisera Student */
+
+DROP TABLE IF EXISTS Student;
+
+CREATE TALBE Student (
+	Id INT NOT NULL,
+	FirstName VARCHAR(255) NOT NULL,
+	LastName VARCHAR(255) NOT NULL,
+	CONSTRAINT PRIMARY KEY(Id)
+)  ENGINE=INNODB;
+
+INSERT INTO Student (Id, FirstName, LastName)
+SELECT DISTINCT Id, SUBSTRING_INDEX(Name, ' ', 1), SUBSTRING_INDEX(Name, ' ', -1)
+FROM UNF;
+
+/* Normalisera Student */
+
+/* Normalisera Phone */
+
+
+
