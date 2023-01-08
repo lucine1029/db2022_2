@@ -2,6 +2,9 @@
 Inlämningsuppgift
 
 ## Entity Relationship Diagram
+
+```mermaid
+
 erDiagram
     Student ||--o{ Phone : has
     Student ||--o{ StudentSchool :attends
