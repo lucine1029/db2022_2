@@ -91,8 +91,33 @@ CREATE TABLE Hobby(
 ) ENGINE=INNODB;
 
 INSERT INTO Hobby(HobbyName)
-	SELECT trim(SUBSTRING_INDEXT(Hobbies, ',', 1) AS HobbyName FROM UNF
-	WHERE Hobbies IS NOT NULL AND Hobbies != ''
+SELECT DISTINCT Name FROM (
+	SELECT Id, trim(substring_index(Hobbies, ",", 1)) AS Name FROM UNF WHERE Hobbies != ""
+	UNION
+	SELECT Id, trim(substring_index(substring_index(Hobbies, ",", 2), ",", -1)) AS Name FROM UNF WHERE Hobbies != ""
+	UNION
+	SELECT Id, trim(substring_index(Hobbies, ",", -1)) AS Name FROM UNF WHERE Hobbies != "") AS Hobby2;
+
+DROP TABLE IF EXISTS StudentHobby;
+CREATE TABLE StudentHobby(
+	StudentId INT NOT NULL,
+	HobbyId INT NOT NULL,
+	CONSTRAINT PRIMARY KEY (StudentId, HobbyId)
+) ENGINE=INNODB;
+
+INSERT INTO StudentHobby
+SELECT DISTINCT StudentId, HobbyId FROM (
+        SELECT Id AS StudentId, trim(substring_index(Hobbies, ",", 1)) AS Name FROM UNF WHERE Hobbies != ""
+        UNION
+        SELECT Id AS StudentId, trim(substring_index(substring_index(Hobbies, ",", 2), ",", -1)) AS Name FROM UNF WHERE Hobbies != ""
+        UNION
+        SELECT Id AS StudentId, trim(substring_index(Hobbies, ",", -1)) AS Name FROM UNF WHERE Hobbies != "") AS Hobby2
+	JOIN Hobby ON Hobby2.Name = Hobby.HobbyName;
+
+DROP VIEW IF EXISTS HobbyList;
+CREATE VIEW HobbyList AS SELECT StudentId, group_concat(HobbyName) FROM StudentHobby JOIN Hobby USING (HobbyId) GROUP BY StudentId;
+
+
 
 
 
