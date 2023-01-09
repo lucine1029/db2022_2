@@ -1,6 +1,8 @@
 # db2022_2
 Inlämningsuppgift
 
+database files are db.sql and denormalized-data.csv
+
 ## Entity Relationship Diagram
 
 ```mermaid
